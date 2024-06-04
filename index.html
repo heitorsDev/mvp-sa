@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de orçamento</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        * {
+            font-family: "Montserrat", sans-serif;
+  
+        }
+
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        table {
+            width: 90vw;
+            text-align: center;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        .lista-pedidos{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Organizador de orçamento</h1>
+    <div class="pedidos">
+        <div class="pedido">
+            <label for="nomePedido">Nome:</label>
+            <input type="text" id="nomePedido">
+            <label for="precoPedido">Preço:</label>
+            <input type="number" id="precoPedido">
+            <label for="quantidadePedido">Quantidade:</label>
+            <input type="number" id="quantidadePedido" value="1" min="1">
+            <label for="ingredientesPedido">Ingredientes:</label>
+            <input type="text" id="ingredientesPedido">
+            <button onclick="adicionarEditarPedido()">Adicionar/Editar Pedido</button>
+        </div>
+    </div>
+    <div class="lista-pedidos">
+        <h2>Pedidos:</h2>
+        <table id="tabelaPedidos">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Ingredientes</th>
+                </tr>
+            </thead>
+            <tbody id="corpoTabelaPedidos"></tbody>
+        </table>
+    </div>
+    <div class="preco-final">Preço Final: <span id="precoFinal">0</span></div>
+
+    <script>
+        let pedidos = [];
+        let pedidoEmEdicao = null;
+
+        function adicionarEditarPedido() {
+            const nome = document.getElementById("nomePedido").value;
+            const preco = parseFloat(document.getElementById("precoPedido").value);
+            const quantidade = parseInt(document.getElementById("quantidadePedido").value);
+            const ingredientesInput = document.getElementById("ingredientesPedido").value;
+            const ingredientes = ingredientesInput.split(",").map(ingrediente => ingrediente.trim());
+
+            if (nome && preco) {
+                if (pedidoEmEdicao) {
+                    // Editar pedido existente
+                    pedidoEmEdicao.nome = nome;
+                    pedidoEmEdicao.preco = preco;
+                    pedidoEmEdicao.quantidade = quantidade;
+                    pedidoEmEdicao.ingredientes = ingredientes;
+                    pedidoEmEdicao = null;
+                } else {
+                    // Adicionar novo pedido
+                    pedidos.push({ nome: nome, preco: preco, quantidade: quantidade, ingredientes: ingredientes });
+                }
+                atualizarTabelaPedidos();
+                atualizarPrecoFinal();
+                limparCamposPedido();
+            } else {
+                alert("Por favor, preencha o nome e o preço do pedido.");
+            }
+        }
+
+        function atualizarTabelaPedidos() {
+            const corpoTabela = document.getElementById("corpoTabelaPedidos");
+            corpoTabela.innerHTML = "";
+            pedidos.forEach(pedido => {
+                const row = corpoTabela.insertRow();
+                const cellNome = row.insertCell(0);
+                const cellPreco = row.insertCell(1);
+                const cellQuantidade = row.insertCell(2);
+                const cellIngredientes = row.insertCell(3);
+                cellNome.innerHTML = pedido.nome;
+                cellPreco.innerHTML = `R$ ${pedido.preco.toFixed(2)}`;
+                cellQuantidade.innerHTML = pedido.quantidade;
+                cellIngredientes.innerHTML = pedido.ingredientes.join(", ");
+            });
+        }
+
+        function editarPedido(index) {
+            const pedido = pedidos[index];
+            document.getElementById("nomePedido").value = pedido.nome;
+            document.getElementById("precoPedido").value = pedido.preco;
+            document.getElementById("quantidadePedido").value = pedido.quantidade;
+            document.getElementById("ingredientesPedido").value = pedido.ingredientes.join(", ");
+            pedidoEmEdicao = pedido;
+        }
+
+        function atualizarPrecoFinal() {
+            let precoFinal = 0;
+            pedidos.forEach(pedido => {
+                precoFinal += pedido.preco * pedido.quantidade;
+            });
+            document.getElementById("precoFinal").innerText = precoFinal.toFixed(2);
+        }
+
+        function limparCamposPedido() {
+            document.getElementById("nomePedido").value = "";
+            document.getElementById("precoPedido").value = "";
+            document.getElementById("quantidadePedido").value = "1";
+            document.getElementById("ingredientesPedido").value = "";
+        }
+    </script>
+</body>
+
+</html>
