@@ -9,13 +9,14 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
         * {
             font-family: "Montserrat", sans-serif;
-  
         }
 
-        body{
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin: 0;
+            padding: 0;
         }
 
         table {
@@ -31,10 +32,44 @@
             padding: 8px;
             text-align: left;
         }
-        .lista-pedidos{
+
+        .lista-pedidos {
             text-align: center;
         }
-    </style>
+
+        .pedidos {
+            width: 70vw;
+            margin-bottom: 20px;
+        }
+
+        .pedido {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pedido label {
+            width: calc(50% - 5px);
+        }
+
+        .pedido input[type="text"],
+        .pedido input[type="number"] {
+            width: calc(50% - 5px);
+        }
+
+        .pedido button {
+            width: calc(50% - 5px);
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .preco-final {
+            width: 90vw;
+            text-align: center;
+        }    </style>
 </head>
 
 <body>
@@ -61,12 +96,13 @@
                     <th>Preço</th>
                     <th>Quantidade</th>
                     <th>Ingredientes</th>
+                    <th>Editar</th> <!-- Nova coluna para o botão de edição -->
                 </tr>
             </thead>
             <tbody id="corpoTabelaPedidos"></tbody>
         </table>
     </div>
-    <div class="preco-final">Preço Final: <span id="precoFinal">0</span></div>
+    <div class="preco-final">Preço Final: R$ <span id="precoFinal">0</span></div>
 
     <script>
         let pedidos = [];
@@ -102,16 +138,18 @@
         function atualizarTabelaPedidos() {
             const corpoTabela = document.getElementById("corpoTabelaPedidos");
             corpoTabela.innerHTML = "";
-            pedidos.forEach(pedido => {
+            pedidos.forEach((pedido, index) => {
                 const row = corpoTabela.insertRow();
                 const cellNome = row.insertCell(0);
                 const cellPreco = row.insertCell(1);
                 const cellQuantidade = row.insertCell(2);
                 const cellIngredientes = row.insertCell(3);
+                const cellEditar = row.insertCell(4); // Nova célula para o botão de edição
                 cellNome.innerHTML = pedido.nome;
                 cellPreco.innerHTML = `R$ ${pedido.preco.toFixed(2)}`;
                 cellQuantidade.innerHTML = pedido.quantidade;
                 cellIngredientes.innerHTML = pedido.ingredientes.join(", ");
+                cellEditar.innerHTML = `<button onclick="editarPedido(${index})">Editar</button>`; // Botão de edição
             });
         }
 
