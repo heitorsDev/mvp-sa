@@ -38,7 +38,7 @@
         }
 
         .pedidos {
-            width: 70vw;
+            width: 90vw; /* Alterado para 90vw para dispositivos móveis */
             margin-bottom: 20px;
         }
 
@@ -69,7 +69,16 @@
         .preco-final {
             width: 90vw;
             text-align: center;
-        }    </style>
+        }
+
+        /* Estilos para dispositivos móveis */
+        @media only screen and (max-width: 600px) {
+            .pedidos,
+            .pedido {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
